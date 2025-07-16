@@ -1,80 +1,151 @@
-# ComretonAI MVP - A Verifiable Compute Network on Aptos
+# ComretonAI MVP – A Verifiable Compute Network on Aptos
 
-Welcome to the ComretonAI MVP! This project is a working proof-of-concept for a decentralized, trustless, and verifiable compute network built on the Aptos blockchain. Our mission is to enable developers to run off-chain machine learning models and receive a cryptographically secure, on-chain proof of the inference result.
+Welcome to the ComretonAI MVP! This project serves as a working proof-of-concept for a decentralized, trustless, and verifiable compute network built on the Aptos blockchain. Our mission is to empower developers to execute off-chain machine learning models and receive cryptographically secure, on-chain proofs of the inference results.
 
-This MVP demonstrates the complete end-to-end flow: from generating a Zero-Knowledge Proof (ZKP) for an ML model's output, to having that proof be verified by a smart contract on the Aptos devnet, all orchestrated by an automated off-chain service with a functioning economic loop.
+This MVP demonstrates the full end-to-end pipeline—from generating a Zero-Knowledge Proof (ZKP) for an ML model's output, to verifying that proof via a smart contract on the Aptos devnet—all coordinated by an automated off-chain service with a functioning economic incentive loop.
+
+---
 
 ## Table of Contents
 
-- [Project Architecture](#project-architecture)
-  - [Core Components](#core-components)
-  - [Workflow](#workflow)
-- [Tech Stack](#tech-stack)
-- [Repository Structure](#repository-structure)
-- [Developer Guide (Getting Started)](#developer-guide-getting-started)
-  - [Prerequisites](#prerequisites)
-  - [Installation](#installation)
-  - [Running the Full System](#running-the-full-system)
-- [User Guide (Using the MVP)](#user-guide-using-the-mvp)
-  - [Step 1: Initialize the System & Register a Model](#step-1-initialize-the-system--register-a-model)
-  - [Step 2: Whitelist Your Account as an Executor](#step-2-whitelist-your-account-as-an-executor)
-  - [Step 3: Test the Full Economic Loop](#step-3-test-the-full-economic-loop)
+* [Project Architecture](#project-architecture)
+
+  * [Core Components](#core-components)
+  * [Workflow](#workflow)
+* [Tech Stack](#tech-stack)
+* [Repository Structure](#repository-structure)
+* [Developer Guide (Getting Started)](#developer-guide-getting-started)
+
+  * [Prerequisites](#prerequisites)
+  * [Installation](#installation)
+  * [Running the Full System](#running-the-full-system)
+* [User Guide (Using the MVP)](#user-guide-using-the-mvp)
+
+  * [Step 1: Initialize the System & Register a Model](#step-1-initialize-the-system--register-a-model)
+  * [Step 2: Whitelist Your Account as an Executor](#step-2-whitelist-your-account-as-an-executor)
+  * [Step 3: Test the Full Economic Loop](#step-3-test-the-full-economic-loop)
+
+---
 
 ## Project Architecture
 
-The ComretonAI MVP is a hybrid on-chain/off-chain system designed to combine the immense processing power of off-chain computation with the immutable trust of a public blockchain.
+ComretonAI is a hybrid on-chain/off-chain system that merges the computational power of off-chain processing with the immutability and trust guarantees of a public blockchain.
+
+```mermaid
+sequenceDiagram
+    participant User as User (CLI/Script)
+    participant Aptos as Aptos Blockchain
+    participant Service as Off-Chain Service
+
+    box On-Chain (Aptos)
+        participant Orchestrator as Orchestrator Contract
+        participant Verifier as Verifier Contract
+    end
+
+    box Off-Chain
+        participant User
+        participant Service
+    end
+
+    Note over User, Aptos: Initial Setup
+    User->>Aptos: 1. Deploy Contracts (Orchestrator, Verifier)
+    User->>Aptos: 2. initialize()
+    User->>Aptos: 3. register_model()
+    User->>Aptos: 4. register_executor()
+
+    Note over User, Aptos: --- Job Lifecycle ---
+
+    User->>Aptos: 5. request_inference() with fee
+    Aptos-->>Orchestrator: Call function
+    Orchestrator->>Orchestrator: Escrow fee
+    Orchestrator->>Orchestrator: Create Job (status: Pending)
+    Orchestrator-->>Aptos: Emit JobCreatedEvent
+
+    loop Every 10 seconds
+        Service->>Aptos: 6. Poll for pending jobs
+        Aptos-->>Service: Return pending Job #X
+    end
+
+    Service->>Service: 7. Generate ZK Proof for Job #X
+
+    Service->>Aptos: 8. submit_result(Job #X, Proof, Result)
+    Aptos-->>Orchestrator: Call function
+    Orchestrator->>Verifier: 9. verify_groth16_proof(Proof)
+    Verifier-->>Orchestrator: Return true/false
+
+    alt Proof is Valid
+        Orchestrator->>Orchestrator: 10. Update Job #X (status: Completed)
+        Orchestrator->>Orchestrator: 11. Transfer fee to Service (reward)
+    else Proof is Invalid
+        Orchestrator-->>Aptos: Abort transaction
+    end
+```
+
+---
 
 ### Core Components
 
-1.  **On-Chain Contracts (Aptos & Move):**
-    *   **`mlp_verifier.move`**: A highly-optimized smart contract containing the hardcoded verification key for our specific ML model. Its sole purpose is to perform the final, cryptographic `bn254_pairing_check`.
-    *   **`orchestrator.move`**: The main application logic contract. It manages the lifecycle of inference jobs, including:
-        *   A registry of ML models.
-        *   A table of active and completed jobs.
-        *   An escrow "pot" to hold user fees.
-        *   An allowlist of trusted, off-chain executors.
-        *   Emitting a `JobCreatedEvent` to signal that new work is available.
+1. **On-Chain Contracts (Aptos & Move):**
 
-2.  **Off-Chain Crypto Engine (Circom & snarkJS):**
-    *   **`mlp.circom`**: A ZKP circuit that mathematically represents a simple 2-layer Multi-Layer Perceptron (MLP). This circuit can prove that for a given set of weights and inputs, a specific output was correctly calculated.
-    *   **Prover Script (`run.mjs`)**: A Node.js script that uses `snarkjs` to take model weights and inputs, generate a cryptographic proof of the computation, and output it to `proof.json`.
+   * **`mlp_verifier.move`** – A lightweight smart contract containing a hardcoded verification key for the ML model. It performs a cryptographic `bn254_pairing_check` to validate proofs.
+   * **`orchestrator.move`** – The main application logic. It manages:
 
-3.  **Off-Chain Services (Node.js):**
-    *   **`comreton-service.mjs`**: An automated, continuously running backend service that acts as both the **Indexer** and **Executor**.
-        *   **Indexer Role**: It polls the Aptos blockchain, scans the `jobs` table in our `orchestrator` contract, and identifies any jobs with a `Pending` status.
-        *   **Executor Role**: When a pending job is found, it runs the prover script to generate a ZK proof, then calls the `submit_result` function on-chain, delivering the result and the proof to claim its reward.
+     * Model registration
+     * Job creation and tracking
+     * Escrow and reward distribution
+     * Executor allowlisting
+     * Job lifecycle events
+
+2. **Off-Chain Crypto Engine (Circom & snarkJS):**
+
+   * **`mlp.circom`** – A ZKP circuit representing a 2-layer Multi-Layer Perceptron (MLP).
+   * **`run.mjs`** – A Node.js script that uses `snarkjs` to generate ZKPs from weights and inputs.
+
+3. **Off-Chain Services (Node.js):**
+
+   * **`comreton-service.mjs`** – A backend agent that:
+
+     * **Indexes** the blockchain for pending jobs.
+     * **Executes** the prover and submits results back on-chain.
+
+---
 
 ### Workflow
 
-1.  **Setup (Admin):** An administrator deploys the contracts and calls `initialize()` and `register_executor()` to set up the system.
-2.  **Request (User):** A user calls the `request_inference()` function on the `orchestrator` contract. They pay a fee, which is held in escrow by the contract.
-3.  **Detect & Execute (Off-Chain Service):** The `comreton-service` detects the pending job. It runs the prover to generate the ZK proof for the specified computation.
-4.  **Submit & Verify (Off-Chain Service):** The service calls the `submit_result()` function, providing the ML output and the ZK proof.
-5.  **Reward (On-Chain):** The `orchestrator` contract calls the `mlp_verifier` contract. If the proof is valid, the job's status is updated to `Completed`, and the fee is transferred from the escrow to the executor's account.
+1. **Setup (Admin):** Deploy contracts, initialize, and register executors.
+2. **Inference Request (User):** The user pays a fee and submits an inference request.
+3. **Job Detection (Service):** The off-chain service detects pending jobs.
+4. **Proof Generation (Service):** It generates a ZK proof using the prover circuit.
+5. **Result Submission (Service):** It submits the result and proof to the blockchain.
+6. **Verification (On-Chain):** If valid, the job is marked complete and the fee is rewarded.
+
+---
 
 ## Tech Stack
 
-*   **Blockchain:** Aptos (Devnet)
-*   **Smart Contracts:** Move
-*   **Zero-Knowledge Proofs:** Circom & snarkjs
-*   **Off-Chain Components:** Node.js
+* **Blockchain:** Aptos (Devnet)
+* **Smart Contracts:** Move
+* **Zero-Knowledge Proofs:** Circom, snarkjs
+* **Off-Chain Automation:** Node.js
+
+---
 
 ## Repository Structure
 
 ```
 ComretonAI/
 ├── packages/
-│   ├── aptos/             # All on-chain Move smart contracts
+│   ├── aptos/             # Move smart contracts
 │   │   ├── sources/
 │   │   │   ├── verifier.move
 │   │   │   └── orchestrator.move
 │   │   └── Move.toml
-│   ├── circuits/          # The ZKP circuit and prover logic
+│   ├── circuits/          # Circom circuit + prover logic
 │   │   ├── mlp.circom
 │   │   └── run.mjs
-│   ├── services/          # The automated off-chain indexer/executor
+│   ├── services/          # Off-chain job poller and executor
 │   │   └── comreton-service.mjs
-│   └── submitter/         # Manual scripts for testing and interaction
+│   └── submitter/         # CLI scripts for dev/test
 │       ├── test_orchestrator.mjs
 │       ├── whitelist_executor.mjs
 │       └── test_economic_loop.mjs
@@ -85,105 +156,116 @@ ComretonAI/
 
 ## Developer Guide (Getting Started)
 
-This guide will help you set up a local development environment to work on the ComretonAI codebase.
+This section walks you through setting up your local environment.
 
 ### Prerequisites
 
-1.  **Node.js:** v18.0 or higher.
-2.  **Rust & Cargo:** Required to install the Circom compiler.
-3.  **Aptos CLI:** A modern version that supports the `features` flag in `Move.toml`.
-4.  **Git**.
+* **Node.js** (v18+)
+* **Rust & Cargo** (for Circom)
+* **Aptos CLI** (latest)
+* **Git**
 
 ### Installation
 
-1.  **Clone the Repository:**
-    ```bash
-    git clone https://github.com/pro-utkarshM/ComretonAI/
-    cd ComretonAI
-    ```
+```bash
+# Clone repo
+git clone https://github.com/pro-utkarshM/ComretonAI/
+cd ComretonAI
+```
 
-2.  **Install Circom Compiler:**
-    ```bash
-    cargo install circom
-    ```
+```bash
+# Install Circom
+cargo install circom
+```
 
-3.  **Install Node.js Dependencies for all packages:**
-    ```bash
-    # Install for circuits package
-    cd packages/circuits
-    npm install
+```bash
+# Install Node dependencies
+cd packages/circuits && npm install
+cd ../submitter && npm install
+cd ../services && npm install
+cd ../..  # Back to root
+```
 
-    # Install for submitter package
-    cd ../submitter
-    npm install
+```bash
+# Set up Aptos account
+cd packages/aptos
+aptos init
+# Then update your Move.toml and .mjs scripts with the new address/private key
+```
 
-    # Install for services package
-    cd ../services
-    npm install
-
-    cd ../.. # Return to root
-    ```
-
-4.  **Set Up Aptos Account:**
-    The project is configured to use a local `.aptos` directory. If you don't have one, navigate to `packages/aptos` and run `aptos init` to generate a fresh account for testing. You will need to update the address and private key in the `Move.toml` and all `.mjs` scripts accordingly.
+---
 
 ### Running the Full System
 
-1.  **Deploy Contracts:** From `packages/aptos`, run `aptos move publish`.
-2.  **Start the Service:** In one terminal, from `packages/services`, run `node comreton-service.mjs`.
-3.  **Submit Work:** In another terminal, use the scripts in `packages/submitter` to interact with the deployed contracts, following the User Guide below.
+1. **Deploy Contracts:**
+
+```bash
+cd packages/aptos
+aptos move publish
+```
+
+2. **Start the Service:**
+
+```bash
+cd ../services
+node comreton-service.mjs
+```
+
+3. **Submit Work via Scripts:**
+
+```bash
+cd ../submitter
+node test_orchestrator.mjs
+```
 
 ---
 
 ## User Guide (Using the MVP)
 
-This guide walks you through interacting with the deployed MVP to test the entire economic loop, from user payment to executor reward.
+This guide will help you interact with the MVP and test the complete inference and reward loop.
 
-This guide assumes:
-*   The contracts have been deployed by an administrator.
-*   Your account address and private key are correctly configured in all `.mjs` scripts in the `packages/submitter/` directory.
+> Ensure all scripts in `submitter/` are configured with your Aptos account and private key.
 
-### Step 1: Initialize the System & Register a Model
+---
 
-This step only needs to be run **once per deployment**. It creates the manager resource on-chain and registers our default MLP model with a fee.
+### Step 1: Initialize & Register a Model
 
 ```bash
-# Navigate to the submitter package
 cd packages/submitter
-
-# Run the initialization and registration script
 node test_orchestrator.mjs
 ```
-**Expected Outcome:** Two successful transactions. The on-chain application is now "live".
 
-### Step 2: Whitelist Your Account as an Executor
+**Outcome:** Two transactions succeed. Contracts are initialized, and the model is registered.
 
-To be able to earn rewards for completing jobs, your account must be authorized. This admin function adds your account to the on-chain allowlist.
+---
+
+### Step 2: Whitelist Executor Account
 
 ```bash
-# In packages/submitter/
 node whitelist_executor.mjs
 ```
-**Expected Outcome:** A successful transaction that authorizes your account.
+
+**Outcome:** Your account is added to the executor allowlist.
+
+---
 
 ### Step 3: Test the Full Economic Loop
 
-This is the main demonstration of the MVP. The `test_economic_loop.mjs` script simulates both the **user** and the **executor**.
-
-1.  First, it acts as a **user**, calling `request_inference` and paying the fee into the contract's escrow.
-2.  Then, it acts as the **executor**, calling `submit_result` with the ZK proof to complete the job and claim the fee as a reward.
-
 ```bash
-# In packages/submitter/
 node test_economic_loop.mjs
 ```
 
-**Expected Outcome:**
-You will see two successful transactions logged to the console:
-1.  The first for creating the job and paying the fee.
-2.  The second for submitting the result and receiving the reward.
+**What it does:**
 
-A final success message will be printed:
-`🎉 CONGRATULATIONS! Phase 3 Complete! 🎉 The full economic loop (Pay -> Escrow -> Work -> Reward) is working.`
+* Requests inference (User)
+* Detects & solves job (Executor)
+* Submits proof + receives reward
 
-This single script demonstrates that the entire on-chain system is functioning correctly.
+**Expected Output:**
+
+```
+🎉 CONGRATULATIONS! Phase 3 Complete! 🎉
+The full economic loop (Pay -> Escrow -> Work -> Reward) is working.
+```
+
+---
