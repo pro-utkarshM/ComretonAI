@@ -3,7 +3,7 @@ import { AptosClient, AptosAccount, FaucetClient, TxnBuilderTypes } from 'aptos'
 import * as fs from 'fs';
 
 // --- CONFIGURATION ---
-const CONTRACT_ADDRESS = '0xad3ad151a8b47e263976516dde60a87335a825b4339ddbde0fc68615526c9ba8';
+const CONTRACT_ADDRESS = '0x911bd65e2cb0e42893f08022b8ec9cd058e1233f460f78bfdd296888665c1013';
 const PRIVATE_KEY = 'ed25519-priv-0x2f2fe96ab8b1470b5abdc244a0039f8bffa2f8b89c29066dc7f59865f81ebe55';
 const NODE_URL = "https://fullnode.devnet.aptoslabs.com";
 // --- END CONFIGURATION ---

@@ -4,7 +4,8 @@ version = "1.0.0"
 authors = []
 
 [addresses]
-comreton_verifier = "0xad3ad151a8b47e263976516dde60a87335a825b4339ddbde0fc68615526c9ba8"
+# comreton_verifier = "0xad3ad151a8b47e263976516dde60a87335a825b4339ddbde0fc68615526c9ba8"
+comreton_verifier = "0x911bd65e2cb0e42893f08022b8ec9cd058e1233f460f78bfdd296888665c1013"
 
 [dependencies]
 AptosFramework = { git = "https://github.com/aptos-labs/aptos-core.git", rev = "b252954", subdir = "aptos-move/framework/aptos-framework" }

@@ -1,5 +1,5 @@
-// In packages/submitter/test_request.mjs
-import { AptosClient, AptosAccount, FaucetClient, TxnBuilderTypes } from 'aptos';
+// In packages/submitter/whitelist_executor.mjs
+import { AptosClient, AptosAccount } from 'aptos';
 
 // --- CONFIGURATION ---
 const CONTRACT_ADDRESS = '0x911bd65e2cb0e42893f08022b8ec9cd058e1233f460f78bfdd296888665c1013';
@@ -9,9 +9,6 @@ const NODE_URL = "https://fullnode.devnet.aptoslabs.com";
 
 function hexToUint8Array(hex) {
     let hexString = hex.startsWith('0x') ? hex.substring(2) : hex;
-    if (hexString.length % 2 !== 0) {
-        hexString = '0' + hexString;
-    }
     return new Uint8Array(hexString.match(/.{1,2}/g).map(byte => parseInt(byte, 16)));
 }
 
@@ -19,17 +16,17 @@ async function main() {
     const client = new AptosClient(NODE_URL);
     const privateKeyBytes = hexToUint8Array(PRIVATE_KEY.split('-priv-')[1]);
     const aptosAccount = new AptosAccount(privateKeyBytes);
-    console.log(`✅ Using account: ${aptosAccount.address()}`);
+    console.log(`✅ Using admin account: ${aptosAccount.address()}`);
 
-    // --- Call the request_inference function for Model #0 ---
-    console.log("\n🚀 Calling request_inference() for Model #0...");
+    // The address we want to whitelist as an executor.
+    // For this test, we will whitelist our own account.
+    const executorAddress = aptosAccount.address();
+    console.log(`\n🚀 Whitelisting executor address: ${executorAddress}`);
+
     const payload = {
-        function: `${CONTRACT_ADDRESS}::orchestrator::request_inference`,
+        function: `${CONTRACT_ADDRESS}::orchestrator::register_executor`,
         type_arguments: [],
-        arguments: [
-            "0", // The ID of the model we registered previously.
-            [],  // Dummy input data for now.
-        ],
+        arguments: [executorAddress],
     };
 
     const txnRequest = await client.generateTransaction(aptosAccount.address(), payload);
@@ -38,9 +35,7 @@ async function main() {
     await client.waitForTransaction(transactionRes.hash);
 
     console.log(`  -> Success! Txn Hash: ${transactionRes.hash}`);
-    console.log(`✅ Job #0 should now be created in the contract's table.`);
-    console.log("\n🎉 Successfully requested the first inference job!");
-    console.log("➡️ Next step: Check the explorer to see the 'JobCreatedEvent' that was emitted!");
+    console.log(`✅ Account ${executorAddress} is now an authorized executor.`);
 }
 
 main().catch(err => {
