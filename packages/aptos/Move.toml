@@ -1,0 +1,10 @@
+[package]
+name = "comreton_verifier"
+version = "1.0.0"
+authors = []
+
+[addresses]
+comreton_verifier = "0xad3ad151a8b47e263976516dde60a87335a825b4339ddbde0fc68615526c9ba8"
+
+[dependencies]
+AptosFramework = { git = "https://github.com/aptos-labs/aptos-core.git", rev = "b252954", subdir = "aptos-move/framework/aptos-framework" }
