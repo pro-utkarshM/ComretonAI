@@ -1,0 +1,11 @@
+[package]
+name = "ComretonAI"
+version = "0.0.1"
+
+[addresses]
+comretonai = "_"
+
+[dependencies.AptosFramework]
+git = "https://github.com/aptos-labs/aptos-framework.git"
+rev = "testnet"
+subdir = "aptos-framework"
