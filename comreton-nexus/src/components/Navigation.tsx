@@ -8,7 +8,7 @@ import { usePathname } from 'next/navigation'
 
 // The links are now defined outside for easier management
 const navLinks = [
-    { href: '/marketplace', label: 'Marketplace' },
+    { href: '/marketplace', label: 'Marketplace', connected: true },
     { href: '/deploy', label: 'Deploy', connected: true },
     { href: '/audit', label: 'Audit', connected: true },
     { href: '/compute', label: 'Compute', connected: true },
