@@ -2,128 +2,138 @@
 
 import { Navigation } from '@/components/Navigation'
 import { AnimatedCounter } from '@/components/AnimatedCounter'
-import { NeuralFlow } from '@/components/NeuralFlow' // This will be our new animated component
-import { Brain, Shield, Code, Cpu, Zap, Lock, Users, Coins, ArrowRight, Star, CheckCircle } from 'lucide-react'
+import { NeuralFlow } from '@/components/NeuralFlow'
+import {
+  Brain,
+  ShieldCheck,
+  Code,
+  Cpu,
+  Zap,
+  ArrowRight
+} from 'lucide-react'
 import Link from 'next/link'
 
 export default function Home() {
   return (
-    // The bg color is now on the root div, which is good.
-    <div className="min-h-screen bg-nexus-bg text-nexus-text overflow-x-hidden">
+    <div className="min-h-screen bg-background text-foreground overflow-x-hidden">
       <Navigation />
 
       <main className="w-full">
-        {/* Section 1: Hero - The First Impression */}
-        {/* This section now uses relative positioning for its contents and a z-index to layer them correctly. */}
-        <section className="relative w-full min-h-screen flex items-center justify-center text-center overflow-hidden px-4">
-          {/* Background Gradient & Effects */}
-          <div className="absolute inset-0 -z-20 bg-grid-pattern opacity-30"></div>
-          <div className="absolute top-1/2 left-1/2 w-[50vw] h-[50vw] bg-nexus-purple/20 rounded-full -translate-x-1/2 -translate-y-1/2 blur-3xl -z-10 animate-float"></div>
+        {/* Section 1: Hero */}
+        <section className="relative w-full h-screen flex flex-col items-center justify-center text-center px-4">
+          <div className="absolute top-1/2 left-1/2 w-[80vw] h-[80vw] max-w-4xl max-h-4xl bg-radial-gradient(ellipse_at_center,rgba(255,255,255,0.05)_0%,rgba(255,255,255,0)_60%) -translate-x-1/2 -translate-y-1/2"></div>
 
           <div className="relative z-10">
-            <span className="inline-flex items-center px-4 py-2 mb-8 rounded-full bg-nexus-surface/80 border border-nexus-border backdrop-blur-sm text-nexus-cyan font-semibold">
-              <Zap className="h-5 w-5 mr-2" />
-              World's First Verifiable AI Protocol
+            <span className="inline-flex items-center px-4 py-1.5 mb-6 text-sm rounded-full border border-foreground/20 bg-foreground/5">
+              <Zap className="h-4 w-4 mr-2 text-foreground/80" />
+              The Future of Verifiable AI is Here
             </span>
 
-            <h1 className="text-5xl md:text-7xl font-black mb-6 leading-tight">
-              <span className="gradient-text">AI You Can Trust.</span>
-              <br />
-              <span>Verifiably.</span>
+            <h1 className="text-5xl md:text-7xl font-black mb-6 leading-tight text-transparent bg-clip-text bg-gradient-to-br from-foreground to-foreground/60">
+              On-Chain Truth for <br /> Off-Chain Intelligence.
             </h1>
 
-            <p className="text-lg md:text-xl text-text-secondary mb-10 max-w-3xl mx-auto">
-              ComretonAI separates <strong className="text-text-primary">on-chain trust</strong> from <strong className="text-text-primary">off-chain computation</strong> to create a provably safe and transparent AI marketplace.
+            <p className="text-lg md:text-xl text-foreground/70 mb-10 max-w-3xl mx-auto">
+              ComretonAI is the decentralized protocol for provably safe and transparent AI execution, powered by Aptos.
             </p>
 
             <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-              <Link href="/marketplace" className="cybernetic-btn group">
-                Explore Marketplace <ArrowRight className="ml-2 h-5 w-5 transition-transform group-hover:translate-x-1" />
+              <Link href="/marketplace" className="group flex items-center justify-center w-full sm:w-auto px-6 py-3 font-semibold bg-foreground text-background rounded-lg transition-transform hover:scale-105">
+                Explore Marketplace
+                <ArrowRight className="ml-2 h-5 w-5 transition-transform group-hover:translate-x-1" />
               </Link>
-              <Link href="/litepaper" className="outline-btn group">
-                Read the Litepaper <Brain className="ml-2 h-5 w-5 transition-transform group-hover:rotate-12" />
+              <Link href="/docs" className="group flex items-center justify-center w-full sm:w-auto px-6 py-3 font-semibold border border-foreground/20 rounded-lg transition-colors hover:border-foreground/50 hover:text-white">
+                Read the Docs
               </Link>
             </div>
           </div>
         </section>
 
-        {/* Section 2: The Proof - On-Chain Metrics Bar */}
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="metrics-bar grid grid-cols-2 md:grid-cols-4 gap-x-4 gap-y-8 text-center glass-card p-8 border-b-4 border-nexus-blue">
-            <div>
-              <p className="text-text-secondary text-sm mb-2">Total Value Staked</p>
+        {/* Section 2: Metrics Bar */}
+        <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-24 relative z-10">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-px text-center bg-foreground/5 border border-foreground/10 rounded-xl overflow-hidden backdrop-blur-md">
+            <div className="px-4 py-8">
+              <p className="text-sm text-foreground/60 mb-2">Total Value Staked</p>
               <AnimatedCounter end={1234567} prefix="$" />
             </div>
-            <div>
-              <p className="text-text-secondary text-sm mb-2">Models Verified</p>
+            <div className="px-4 py-8">
+              <p className="text-sm text-foreground/60 mb-2">Models Verified</p>
               <AnimatedCounter end={42} />
             </div>
-            <div>
-              <p className="text-text-secondary text-sm mb-2">Inferences Processed</p>
+            <div className="px-4 py-8">
+              <p className="text-sm text-foreground/60 mb-2">Inferences Processed</p>
               <AnimatedCounter end={1987654} />
             </div>
-            <div>
-              <p className="text-text-secondary text-sm mb-2">Active Compute Nodes</p>
+            <div className="px-4 py-8">
+              <p className="text-sm text-foreground/60 mb-2">Active Compute Nodes</p>
               <AnimatedCounter end={256} />
             </div>
           </div>
-        </div>
+        </section>
 
-        {/* Section 3: The Animation - "How ComretonAI Works" */}
+        {/* Section 3: How It Works - NOW WITH NEURAL FLOW */}
         <section className="py-24 sm:py-32">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-16">
-              <h2 className="text-4xl md:text-5xl font-black">How <span className="gradient-text">ComretonAI</span> Works</h2>
-              <p className="text-lg text-text-secondary mt-4 max-w-3xl mx-auto">
-                A revolutionary protocol ensuring AI safety via cryptographic proofs and community governance.
+              <h2 className="text-4xl md:text-5xl font-bold">The Protocol in Action.</h2>
+              <p className="text-lg text-foreground/70 mt-4 max-w-2xl mx-auto">
+                Watch a live simulation of our protocol, from model deployment to verified inference and revenue sharing.
               </p>
             </div>
-            {/* The new, animated NeuralFlow component will go here */}
+
+            {/* The new component is simply placed here */}
             <NeuralFlow />
+
           </div>
         </section>
 
-        {/* Section 4: The Personas - "Join the Verification Economy" */}
-        <section className="py-24 sm:py-32 bg-surface-1 rounded-t-3xl">
+        {/* Section 4: Personas */}
+        <section className="py-24 sm:py-32 bg-foreground/[0.02]">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-16">
-              <h2 className="text-4xl md:text-5xl font-black">Join the <span className="gradient-text">Verification Economy</span></h2>
-              <p className="text-lg text-text-secondary mt-4 max-w-3xl mx-auto">
-                Three ways to participate in the decentralized AI revolution and earn rewards.
+              <h2 className="text-4xl md:text-5xl font-bold">The AI Verification Economy</h2>
+              <p className="text-lg text-foreground/70 mt-4 max-w-2xl mx-auto">
+                Whether you build, secure, or power AI, there's a role for you in the ComretonAI ecosystem.
               </p>
             </div>
-            {/* These cards are now properly centered within the grid */}
             <div className="grid lg:grid-cols-3 gap-8">
-              {/* Persona Cards remain the same but will now be centered */}
-              {/* For AI Developers */}
-              <div className="persona-card border-brand-blue">
-                <div className="persona-icon bg-brand-blue/10 text-brand-blue"><Code className="h-10 w-10" /></div>
-                <h3 className="text-2xl font-bold mb-4 text-text-primary">Deploy & Monetize</h3>
-                <p className="text-text-secondary mb-8">Immutable IP rights, automated revenue sharing, and access to a global compute network.</p>
-                <Link href="/deploy" className="outline-btn w-full mt-auto">Deploy a Model</Link>
-              </div>
+              <div className="p-8 border border-foreground/10 rounded-xl bg-background/50 transition-all hover:border-foreground/20 hover:bg-foreground/[0.04]">
+                <div className="w-12 h-12 flex items-center justify-center rounded-lg bg-foreground/10 mb-4"><Code className="w-6 h-6 text-foreground/80" /></div>
+                <h3 className="text-xl font-bold text-white mb-2">For Developers</h3>
+                <p className="mb-4">Monetize your models with automated, on-chain revenue sharing and immutable IP protection.</p>
 
-              {/* For Auditors & Stakers */}
-              <div className="persona-card border-brand-purple">
-                <div className="persona-icon bg-brand-purple/10 text-brand-purple"><Shield className="h-10 w-10" /></div>
-                <h3 className="text-2xl font-bold mb-4 text-text-primary">Secure & Stake</h3>
-                <p className="text-text-secondary mb-8">Put your expertise to work. Review models, stake COMAI, and earn a share of every inference fee.</p>
-                <Link href="/audit" className="outline-btn w-full mt-auto">View Audit Tasks</Link>
+                <Link href="/deploy" className="font-semibold text-white group flex items-center">Learn More <ArrowRight className="ml-1 h-4 w-4 transition-transform group-hover:translate-x-1" /></Link>
               </div>
+              <div className="p-8 border border-foreground/10 rounded-xl bg-background/50 transition-all hover:border-foreground/20 hover:bg-foreground/[0.04]">
+                <div className="w-12 h-12 flex items-center justify-center rounded-lg bg-foreground/10 mb-4"><ShieldCheck className="w-6 h-6 text-foreground/80" /></div>
+                <h3 className="text-xl font-bold text-white mb-2">For Auditors</h3>
+                <p className="mb-4">Put your expertise to work. Earn yield by staking on models you've verified, securing the ecosystem.</p>
 
-              {/* For Compute Providers */}
-              <div className="persona-card border-success">
-                <div className="persona-icon bg-success/10 text-success"><Cpu className="h-10 w-10" /></div>
-                <h3 className="text-2xl font-bold mb-4 text-text-primary">Power & Earn</h3>
-                <p className="text-text-secondary mb-8">Connect idle GPUs. Our simple SDK lets you securely execute jobs and earn COMAI for every computation.</p>
-                <Link href="/compute" className="outline-btn w-full mt-auto">Become a Provider</Link>
+                <Link href="/audit" className="font-semibold text-white group flex items-center">Learn More <ArrowRight className="ml-1 h-4 w-4 transition-transform group-hover:translate-x-1" /></Link>
+              </div>
+              <div className="p-8 border border-foreground/10 rounded-xl bg-background/50 transition-all hover:border-foreground/20 hover:bg-foreground/[0.04]">
+                <div className="w-12 h-12 flex items-center justify-center rounded-lg bg-foreground/10 mb-4"><Cpu className="w-6 h-6 text-foreground/80" /></div>
+                <h3 className="text-xl font-bold text-white mb-2">For Compute Providers</h3>
+                <p className="mb-4">Connect idle hardware, securely execute jobs with our SDK, and earn rewards for powering the network.</p>
+
+                <Link href="/compute" className="font-semibold text-white group flex items-center">Learn More <ArrowRight className="ml-1 h-4 w-4 transition-transform group-hover:translate-x-1" /></Link>
               </div>
             </div>
           </div>
         </section>
 
-        {/* Section 5 & Footer CTA can remain similar but wrapped in max-width containers */}
-
+        {/* Section 5: Final CTA */}
+        <section className="text-center py-24 sm:py-32">
+          <div className="max-w-2xl mx-auto px-4">
+            <h2 className="text-4xl md:text-5xl font-bold text-white">Enter the Nexus.</h2>
+            <p className="text-lg text-foreground/70 mt-4 mb-8">
+              Join the decentralized AI revolution. Deploy, audit, compute, and earn in the world's most transparent AI marketplace.
+            </p>
+            <Link href="/marketplace" className="group flex items-center justify-center w-full sm:w-auto px-6 py-3 font-semibold bg-foreground text-background rounded-lg transition-transform hover:scale-105 mx-auto">
+              Go to Marketplace
+            </Link>
+          </div>
+        </section>
       </main>
     </div>
   )
