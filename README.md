@@ -216,6 +216,4 @@ Inspired by:
 * Zero-knowledge verifiable computing
 * seL4 microkernel and modular security
 
-Here’s the updated `README.md` with a new **Authors** section at the end. You can customize names, roles, and contact links as needed:
-
 ---
