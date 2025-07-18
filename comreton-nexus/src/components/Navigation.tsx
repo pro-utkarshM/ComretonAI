@@ -13,6 +13,7 @@ const navLinks = [
     { href: '/audit', label: 'Audit', connected: true },
     { href: '/compute', label: 'Compute', connected: true },
     { href: '/docs', label: 'docs' },
+    { href: '/demo', label: 'demo' },
 ]
 
 // A simple SVG for our sleek navigation shuttle

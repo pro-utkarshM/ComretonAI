@@ -1,4 +1,4 @@
-module comreton_ai::marketplace {
+module comreton_ai::marketplace_v2 {
     use std::signer;
     use std::string::{Self, String};
     use std::vector;
@@ -423,4 +423,115 @@ module comreton_ai::marketplace {
             (vector::empty(), 0, false, 0)
         }
     }
+
+    // Demo function: Register a demo model (triggers real transaction)
+public entry fun demo_register_model(
+    creator: &signer,
+    marketplace_addr: address,
+) acquires Marketplace, UserProfile {
+    let creator_addr = signer::address_of(creator);
+    
+    // Ensure user has profile
+    if (!exists<UserProfile>(creator_addr)) {
+        create_profile(creator);
+    };
+
+    let marketplace = borrow_global_mut<Marketplace>(marketplace_addr);
+    let model_id = marketplace.next_model_id;
+
+    let model = Model {
+        id: model_id,
+        creator: creator_addr,
+        name: string::utf8(b"ChatBot Pro Demo"),
+        description: string::utf8(b"A demonstration conversational AI model for testing"),
+        ipfs_hash: string::utf8(b"QmDemo123456789"),
+        category: string::utf8(b"NLP"),
+        price_per_inference: 100000, // 0.001 APT
+        status: STATUS_PENDING,
+        auditor_count: 0,
+        total_inferences: 0,
+        created_at: timestamp::now_seconds(),
+    };
+
+    vector::push_back(&mut marketplace.models, model);
+    marketplace.next_model_id = model_id + 1;
+
+    // Update user profile
+    let profile = borrow_global_mut<UserProfile>(creator_addr);
+    vector::push_back(&mut profile.models_created, model_id);
+
+    // Emit event
+    event::emit_event(
+        &mut marketplace.model_created_events,
+        ModelCreatedEvent {
+            model_id,
+            creator: creator_addr,
+            name: string::utf8(b"ChatBot Pro Demo"),
+            timestamp: timestamp::now_seconds(),
+        }
+    );
+}
+
+// TO DO NEXT
+
+// Demo function: Join as compute provider (triggers real transaction)
+public entry fun demo_join_provider(
+    provider: &signer,
+    marketplace_addr: address,
+) acquires Marketplace {
+    let _provider_addr = signer::address_of(provider);
+    let _marketplace = borrow_global_mut<Marketplace>(marketplace_addr);
+    
+    // This is a demo function that just costs gas to demonstrate the flow
+    // In reality, you'd register provider details here
+}
+
+// Demo function: Quick audit (triggers real transaction) 
+public entry fun demo_quick_audit(
+    auditor: &signer,
+    marketplace_addr: address,
+    model_id: u64,
+) acquires Marketplace {
+    let auditor_addr = signer::address_of(auditor);
+    let marketplace = borrow_global_mut<Marketplace>(marketplace_addr);
+    
+    // Auto-approve for demo
+    let approved = true;
+    
+    // Record audit
+    let audit_record = AuditRecord {
+        model_id,
+        auditor: auditor_addr,
+        approved,
+        feedback: string::utf8(b"Demo audit completed successfully"),
+        timestamp: timestamp::now_seconds(),
+    };
+    vector::push_back(&mut marketplace.audits, audit_record);
+
+    // Update model status to verified for demo
+    let i = 0;
+    let models_len = vector::length(&marketplace.models);
+    while (i < models_len) {
+        let model = vector::borrow_mut(&mut marketplace.models, i);
+        if (model.id == model_id) {
+            model.auditor_count = model.auditor_count + 1;
+            if (model.auditor_count >= 1) { // Lower threshold for demo
+                model.status = STATUS_VERIFIED;
+            };
+            break
+        };
+        i = i + 1;
+    };
+
+    // Emit event
+    event::emit_event(
+        &mut marketplace.model_audited_events,
+        ModelAuditedEvent {
+            model_id,
+            auditor: auditor_addr,
+            approved,
+            timestamp: timestamp::now_seconds(),
+        }
+    );
+}
 }

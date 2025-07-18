@@ -121,7 +121,79 @@ export default function Home() {
             </div>
           </div>
         </section>
+        {/* --- NEW SECTION: The Verifiable Pipeline --- */}
+        <section className="py-24 sm:py-32">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="text-center mb-16">
+              <h2 className="text-4xl md:text-5xl font-bold text-white">The Verifiable Pipeline</h2>
+              <p className="text-lg text-foreground/70 mt-4 max-w-3xl mx-auto">
+                From a developer's code to a user's result, every step is cryptographically secured and transparently recorded.
+              </p>
+            </div>
 
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
+
+              {/* Left Column: Execution & Verification Flow */}
+              <div className="space-y-8">
+                {[
+                  { title: "Model Upload", desc: "Creator uploads the Verifiable Model Artifact (VMA)." },
+                  { title: "Resource Allocation", desc: "Smart contract matches the model to an optimal compute provider." },
+                  { title: "Secure Execution", desc: "A sandboxed kernel executes the model with layer-by-layer tracking." },
+                  { title: "Proof Generation", desc: "A ZK-proof of the computation's integrity is created." },
+                  { title: "Community Audit", desc: "Staked auditors verify the model's safety and vote on-chain." },
+                  { title: "Marketplace Listing", desc: "The verified model becomes available for public use." }
+                ].map((step, index) => (
+                  <div key={index} className="flex items-start gap-4">
+                    <div className="flex flex-col items-center">
+                      <div className="w-10 h-10 flex items-center justify-center font-bold text-background bg-foreground rounded-full">
+                        {index + 1}
+                      </div>
+                      {index < 5 && <div className="w-px h-12 bg-foreground/20 mt-2"></div>}
+                    </div>
+                    <div>
+                      <h3 className="font-bold text-white text-lg">{step.title}</h3>
+                      <p className="text-foreground/60">{step.desc}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              {/* Right Column: Protocol Lifecycle & Math */}
+              <div className="sticky top-24 space-y-4">
+                <div className="p-6 border border-foreground/10 rounded-xl bg-foreground/[0.02]">
+                  <h4 className="font-bold text-white mb-2">Phase 1: Model Registration (VMA)</h4>
+                  <code className="block text-xs text-foreground/70 bg-background/50 p-3 rounded">
+                    - model.onnx<br />
+                    - spec.move<br />
+                    - Layer Hashes & Genesis Hash H₀
+                  </code>
+                </div>
+                <div className="p-6 border border-foreground/10 rounded-xl bg-foreground/[0.02]">
+                  <h4 className="font-bold text-white mb-2">Phase 2: Provable Execution (PEE)</h4>
+                  <p className="text-xs text-foreground/60 mb-2">The PEE generates a hash for each layer's state:</p>
+                  <code className="block text-xs text-center text-foreground/70 bg-background/50 p-3 rounded">
+                    H<sub className="text-xs">i</sub> = <span className="text-teal-400">H</span>(H<sub className="text-xs">i-1</sub> || <span className="text-teal-400">H</span>(W<sub className="text-xs">i</sub>) || <span className="text-teal-400">H</span>(A<sub className="text-xs">i-1</sub>))
+                  </code>
+                </div>
+                <div className="p-6 border border-foreground/10 rounded-xl bg-foreground/[0.02]">
+                  <h4 className="font-bold text-white mb-2">Phase 3: Community Auditing</h4>
+                  <p className="text-xs text-foreground/60 mb-2">A model is verified if the sum of approving stakes (S) meets the threshold (Θ):</p>
+                  <code className="block text-xs text-center text-foreground/70 bg-background/50 p-3 rounded">
+                    <span className="text-purple-400">Σ</span> S<sub className="text-xs">i</sub> ≥ Θ
+                  </code>
+                </div>
+                <div className="p-6 border border-foreground/10 rounded-xl bg-foreground/[0.02]">
+                  <h4 className="font-bold text-white mb-2">Phase 4: Inference & ZKP</h4>
+                  <p className="text-xs text-foreground/60 mb-2">The on-chain verifier checks the final proof (π):</p>
+                  <code className="block text-xs text-center text-foreground/70 bg-background/50 p-3 rounded">
+                    π = <span className="text-teal-400">ZK-SNARK</span>(C, w, (H<sub className="text-xs">N-1</sub>, H<sub className="text-xs">N</sub>))
+                  </code>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+        {/* --- END OF NEW SECTION --- */}
         {/* Section 5: Final CTA */}
         <section className="text-center py-24 sm:py-32">
           <div className="max-w-2xl mx-auto px-4">
