@@ -203,8 +203,8 @@ See the [LICENSE](./LICENSE) file for details.
 
 | Name                    | Contact / GitHub                          |
 | ----------------------- | ----------------------------------------- |
-| **Mrigesh**             | [@utkdev](https://github.com/Legend101Zz/)|
-| **Utkarsh**             | [GitHub](https://github.com/pro-utkarshM) |
+| **Mrigesh**             | [@Legend101Zz](https://github.com/Legend101Zz/)|
+| **Utkarsh**             | [@pro-utkarshM](https://github.com/pro-utkarshM) |
 
 ---
 
