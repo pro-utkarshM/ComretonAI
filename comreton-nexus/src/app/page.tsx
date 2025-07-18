@@ -93,7 +93,7 @@ export default function Home() {
             <div className="text-center mb-16">
               <h2 className="text-4xl md:text-5xl font-bold">The AI Verification Economy</h2>
               <p className="text-lg text-foreground/70 mt-4 max-w-2xl mx-auto">
-                Whether you build, secure, or power AI, there's a role for you in the ComretonAI ecosystem.
+                Whether you build, secure, or power AI, there&apos;s a role for you in the ComretonAI ecosystem.
               </p>
             </div>
             <div className="grid lg:grid-cols-3 gap-8">
@@ -107,7 +107,7 @@ export default function Home() {
               <div className="p-8 border border-foreground/10 rounded-xl bg-background/50 transition-all hover:border-foreground/20 hover:bg-foreground/[0.04]">
                 <div className="w-12 h-12 flex items-center justify-center rounded-lg bg-foreground/10 mb-4"><ShieldCheck className="w-6 h-6 text-foreground/80" /></div>
                 <h3 className="text-xl font-bold text-white mb-2">For Auditors</h3>
-                <p className="mb-4">Put your expertise to work. Earn yield by staking on models you've verified, securing the ecosystem.</p>
+                <p className="mb-4">Put your expertise to work. Earn yield by staking on models you&apos;ve verified, securing the ecosystem.</p>
 
                 <Link href="/audit" className="font-semibold text-white group flex items-center">Learn More <ArrowRight className="ml-1 h-4 w-4 transition-transform group-hover:translate-x-1" /></Link>
               </div>
@@ -127,7 +127,7 @@ export default function Home() {
             <div className="text-center mb-16">
               <h2 className="text-4xl md:text-5xl font-bold text-white">The Verifiable Pipeline</h2>
               <p className="text-lg text-foreground/70 mt-4 max-w-3xl mx-auto">
-                From a developer's code to a user's result, every step is cryptographically secured and transparently recorded.
+                From a developer&apos;s code to a user&apos;s result, every step is cryptographically secured and transparently recorded.
               </p>
             </div>
 
@@ -170,7 +170,7 @@ export default function Home() {
                 </div>
                 <div className="p-6 border border-foreground/10 rounded-xl bg-foreground/[0.02]">
                   <h4 className="font-bold text-white mb-2">Phase 2: Provable Execution (PEE)</h4>
-                  <p className="text-xs text-foreground/60 mb-2">The PEE generates a hash for each layer's state:</p>
+                  <p className="text-xs text-foreground/60 mb-2">The PEE generates a hash for each layer&apos;s state:</p>
                   <code className="block text-xs text-center text-foreground/70 bg-background/50 p-3 rounded">
                     H<sub className="text-xs">i</sub> = <span className="text-teal-400">H</span>(H<sub className="text-xs">i-1</sub> || <span className="text-teal-400">H</span>(W<sub className="text-xs">i</sub>) || <span className="text-teal-400">H</span>(A<sub className="text-xs">i-1</sub>))
                   </code>
@@ -199,7 +199,7 @@ export default function Home() {
           <div className="max-w-2xl mx-auto px-4">
             <h2 className="text-4xl md:text-5xl font-bold text-white">Enter the Nexus.</h2>
             <p className="text-lg text-foreground/70 mt-4 mb-8">
-              Join the decentralized AI revolution. Deploy, audit, compute, and earn in the world's most transparent AI marketplace.
+              Join the decentralized AI revolution. Deploy, audit, compute, and earn in the world&apos;s most transparent AI marketplace.
             </p>
             <Link href="/marketplace" className="group flex items-center justify-center w-full sm:w-auto px-6 py-3 font-semibold bg-foreground text-background rounded-lg transition-transform hover:scale-105 mx-auto">
               Go to Marketplace

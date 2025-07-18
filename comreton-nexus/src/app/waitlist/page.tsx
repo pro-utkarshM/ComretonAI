@@ -96,9 +96,9 @@ const WaitlistPage = () => {
                         <div className="w-20 h-20 bg-green-500/10 rounded-full flex items-center justify-center mx-auto mb-6">
                             <CheckCircle className="w-10 h-10 text-green-400" />
                         </div>
-                        <h1 className="text-4xl font-bold text-white mb-4">You're on the list! 🎉</h1>
+                        <h1 className="text-4xl font-bold text-white mb-4">You&apos;re on the list! 🎉</h1>
                         <p className="text-lg text-foreground/70 mb-8 max-w-2xl mx-auto">
-                            Thank you for joining the ComretonAI waitlist. We'll keep you updated on our progress and
+                            Thank you for joining the ComretonAI waitlist. We&apos;ll keep you updated on our progress and
                             give you early access when we launch.
                         </p>
 
@@ -107,7 +107,7 @@ const WaitlistPage = () => {
                                 <Mail className="w-8 h-8 text-blue-400 mb-3" />
                                 <h3 className="font-bold text-white mb-2">Check Your Email</h3>
                                 <p className="text-sm text-foreground/60">
-                                    We've sent a confirmation to {formData.email}
+                                    We&apos;ve sent a confirmation to {formData.email}
                                 </p>
                             </div>
                             <div className="p-6 border border-foreground/10 rounded-xl bg-foreground/[0.02]">
@@ -142,7 +142,7 @@ const WaitlistPage = () => {
                             Join the Future of AI
                         </h1>
                         <p className="text-lg text-foreground/70 max-w-3xl mx-auto">
-                            Be among the first to access ComretonAI's revolutionary platform.
+                            Be among the first to access ComretonAI&apos;s revolutionary platform.
                             Choose your path and help shape the future of decentralized AI.
                         </p>
                     </header>
@@ -465,7 +465,7 @@ const WaitlistPage = () => {
                         </button>
 
                         <p className="text-xs text-foreground/60 text-center mt-4">
-                            By joining, you agree to receive updates about ComretonAI. We respect your privacy and won't spam you.
+                            By joining, you agree to receive updates about ComretonAI. We respect your privacy and won&apos;t spam you.
                         </p>
                     </div>
                 </form>

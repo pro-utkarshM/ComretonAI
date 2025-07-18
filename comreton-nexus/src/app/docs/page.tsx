@@ -144,7 +144,7 @@ export default function DocsPage() {
                                 <li><strong>Create Your Profile:</strong> Call the `create_profile` function to initialize your account on ComretonAI.</li>
                                 <li><strong>Prepare Your Model:</strong> Package your model into one of the supported formats.</li>
                                 <li><strong>Deploy via SDK:</strong> Use the `comretonai deploy` command. This handles uploading your model and registering it on-chain.</li>
-                                <li><strong>Await Audits:</strong> Your model is now visible to auditors. Once verified, you'll start earning rewards from every inference.</li>
+                                <li><strong>Await Audits:</strong> Your model is now visible to auditors. Once verified, you&apos;ll start earning rewards from every inference.</li>
                             </ol>
                         </section>
                     </article>

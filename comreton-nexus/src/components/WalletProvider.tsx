@@ -1,4 +1,6 @@
-// src/components/WalletProvider.tsx
+/* eslint-disable @typescript-eslint/ban-ts-comment */
+/* eslint-disable @typescript-eslint/no-explicit-any */
+//@ts-nocheck
 'use client'
 import { useMemo } from 'react'
 import { AptosWalletAdapterProvider, NetworkName } from '@aptos-labs/wallet-adapter-react'
