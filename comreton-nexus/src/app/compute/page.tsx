@@ -3,24 +3,7 @@
 import { Navigation } from '@/components/Navigation'
 import { Cpu, FileText, Link as LinkIcon, AlertTriangle } from 'lucide-react'
 import Link from 'next/link'
-
-// The text for the simulated terminal output, pulled from your prompt
-const terminalOutput = `
-✅ Using account: 0xad3ad151a8b4...
-
---- STEP 1: ACTING AS USER ---
-🚀 Requesting new inference job (Job #5) and paying fee...
-  -> Success! Txn Hash: 0x2166e...
-✅ Job created and fee paid into escrow.
-
---- STEP 2: ACTING AS EXECUTOR ---
-🚀 Submitting proof for Job #5 to claim reward...
-  - Proof files loaded.
-  -> Success! Txn Hash: 0xbe805...
-✅ Proof verified on-chain and reward paid to executor.
-
-🎉 CONGRATULATIONS! Phase 3 Complete!
-`
+import Image from 'next/image' // Import the Next.js Image component
 
 // The code snippet for the upcoming SDK
 const sdkSnippet = `
@@ -55,11 +38,20 @@ export default function ComputePage() {
           </p>
         </header>
 
-        {/* 2. Live Output Simulation */}
+        {/* 2. Live Output Simulation with GIF */}
         <section className="mb-12">
-          <h2 className="text-2xl font-bold text-white mb-4">Live Economic Loop</h2>
-          <div className="p-6 border border-foreground/10 rounded-xl bg-foreground/[0.02] font-mono text-sm text-foreground/80">
-            <pre className="whitespace-pre-wrap">{terminalOutput}</pre>
+          <h2 className="text-2xl font-bold text-white mb-4">Live Economic Loop in Action</h2>
+          
+          {/* THE NEW GIF COMPONENT */}
+          <div className="p-2 border border-foreground/10 rounded-xl bg-foreground/[0.02]">
+            <Image
+              src="compute-demo.gif" // Next.js automatically finds this in the 'public' folder
+              alt="A live demonstration of the ComretonAI service processing a job."
+              width={1200} // Use the actual width of your GIF
+              height={600} // Use the actual height of your GIF
+              unoptimized={true} // Important for animated GIFs to prevent optimization artifacts
+              className="rounded-lg w-full"
+            />
           </div>
         </section>
         
