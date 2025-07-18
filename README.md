@@ -112,21 +112,23 @@ H_i = H(H_{i-1} || H(W_i) || H(A_{i-1}) || H(B_i))
 \sum_{i \in \mathcal{A}_m} S_i \ge \Theta
 ```
 
-### Phase 4: Inference & Proof Verification
+---
+
+### **Phase 4: Inference & Proof Verification**
 
 * User requests inference through a dApp
-* Execution returns output + ZK-Proof `π`
+* Execution returns output + ZK-Proof $\pi$
 * On-chain verifier checks:
 
-```math
-π = ZK-SNARK(C, w, x)  where x = (H_{N-1}, H_N)
-```
+$$
+\pi = \text{ZK-SNARK}(C, w, x) \quad \text{where} \quad x = (H_{N-1}, H_N)
+$$
 
 * Rewards distributed:
 
-```math
-F_total = F_creator + F_auditors + F_compute + F_protocol
-```
+$$
+F_{\text{total}} = F_{\text{creator}} + F_{\text{auditors}} + F_{\text{compute}} + F_{\text{protocol}}
+$$
 
 ---
 
